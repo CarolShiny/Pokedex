@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.kapt)
+
 }
 
 android {
@@ -66,4 +68,25 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //Coroutines
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+
+    //Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+
+    //ViewModel e LiveData
+    implementation(libs.lifecycle.livedata)
+    implementation(libs.lifecycle.viewmodel)
+
+    //Room para Database
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.room.compiler)
+    implementation (libs.room.runtime)
+
+    //UI
+
+
 }
