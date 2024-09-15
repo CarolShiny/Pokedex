@@ -1,4 +1,4 @@
-package com.example.pokedex
+package com.example.pokedex.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
