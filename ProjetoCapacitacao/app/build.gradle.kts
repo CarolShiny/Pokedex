@@ -94,7 +94,7 @@ dependencies {
     //Dagger - Hilt
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
-    
+    implementation (libs.androidx.hilt.lifecycle.viewmodel)
 
 
 }
