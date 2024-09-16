@@ -1,5 +1,6 @@
 package com.example.pokedex.api
 
+import com.example.pokedex.data.modeldados.remoto.Responses.Pokemon
 import retrofit2.http.Query
 
 import com.example.pokedex.data.modeldados.remoto.Responses.PokemonList
@@ -20,6 +21,6 @@ interface PokeApiService {
     @GET("pokemon/{name}")
     suspend fun  getPokemonInfo(
         @Path("name") name:String
-    )
+    ): Pokemon
 
 }
