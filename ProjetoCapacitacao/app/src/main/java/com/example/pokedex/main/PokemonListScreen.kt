@@ -16,7 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.pokedex.modeldados.Pokemon
+import com.example.pokedex.data.modeldados.Pokemon
 import com.example.pokedex.viewmodel.PokemonViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
