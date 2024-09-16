@@ -21,7 +21,10 @@ composeMaterial3 = "1.0.0-alpha24"
 navigationCompose = "2.8.0"
 daggerHilt = "2.52"
 hiltLifecycleViewmodel = "1.0.0-alpha03"
-
+androidxHiltCompiler = "1.0.0-beta01"
+androidxHiltNavigationCompose = "1.2.0"
+androidSupportPalettev7 = "28.0.0"
+jakewhartonTimber = "5.0.1"
 
 
 [libraries]
@@ -56,6 +59,11 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "daggerHilt" }
 androidx-hilt-lifecycle-viewmodel = {group = 'androidx.hilt', name = 'hilt-lifecycle-viewmodel', version.ref = "hiltLifecycleViewmodel"}
+androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "androidxHiltCompiler"}
+androidx-hilt-navigation-compose = {group= "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose"}
+android-suport-palette-v7 = {group = "com.android.support", name = "palette-v7", version.ref= "androidSupportPalettev7"}
+jakewharton-timber = {group = 'com.jakewharton.timber', name = 'timber', version.ref = "jakewhartonTimber"}
+
 
 
 [plugins]
