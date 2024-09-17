@@ -11,7 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-//Aqui  fornece o repositório pokemon para criar a  Pokedex do app
+// fornece o repositório pokemon para criar a  Pokedex do app
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -22,7 +22,7 @@ object AppModule {
     ) = PokemonRepository(api)
 
    // Instância única de Retrofit para ser utilizada no app, pega o link do RetrofitInstance
-    @Singleton
+   @Singleton
    @Provides
     fun providePokeApiService(): PokeApiService{
         return Retrofit.Builder()

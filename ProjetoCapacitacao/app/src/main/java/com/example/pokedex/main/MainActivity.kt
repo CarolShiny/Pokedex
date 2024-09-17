@@ -34,6 +34,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = "pokemon_tela_lista"){
                     composable("pokemon_tela_lista"){
+                        PokemonListScreen(navController = navController)
 
                     }
                     composable("pokemon_tela_detalhes/{dominantColor}/{PokemonName}",
@@ -60,5 +61,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
 
