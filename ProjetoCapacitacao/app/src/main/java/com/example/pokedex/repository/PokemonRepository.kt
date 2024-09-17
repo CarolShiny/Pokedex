@@ -17,7 +17,7 @@ class PokemonRepository @Inject constructor(
         val response = try {
             api.getPokemonList(limit,offset)
         }catch (e:Exception){
-            return Resource.Error("Você no carregamento da página. Verifique sua conecção com a internet ")
+            return Resource.Error("Erro no carregamento da página. Verifique sua conecção com a internet ")
         }
         return Resource.Success(response)
     }

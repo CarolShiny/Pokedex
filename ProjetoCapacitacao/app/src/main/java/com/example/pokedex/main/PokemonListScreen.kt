@@ -32,6 +32,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.pokedex.R
 
 
@@ -52,14 +53,13 @@ fun PokemonListScreen (navController: NavController) {
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
             )
-            SearchBar(hint = "Pesquisa...",
+            SearchBar(hint = "Pesquisar...",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
             ){
 
             }
-
                 
             }
         }
@@ -107,25 +107,4 @@ fun SearchBar(
         }
     }
 }
-
-@Preview
-@Composable
-fun PreviewPokemonListScreen() {
-    MaterialTheme {
-        Surface {
-            PokemonListScreen(navController = null)
-        }
-
-    }
-}
-
-
-
-
-
-
-
-
-
-
 
