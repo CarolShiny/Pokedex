@@ -8,6 +8,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitInstance {
      const val BASE_URL = "https://pokeapi.co/api/v2/"
 
-    // Instância única de Retrofit para ser utilizada no app será peag
+
 
 }

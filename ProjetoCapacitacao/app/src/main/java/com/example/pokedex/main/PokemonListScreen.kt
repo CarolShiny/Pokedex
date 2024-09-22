@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,7 +33,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.pokedex.R
+import com.example.pokedex.ui.theme.PokedexTheme
 
 
 //Tela de lista de Pokemon
@@ -43,6 +46,7 @@ fun PokemonListScreen (navController: NavController) {
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
     ){
+        Greeting(name = "vai")
         Column {
             Spacer(modifier = Modifier.height(20.dp))
             Image(
@@ -52,14 +56,13 @@ fun PokemonListScreen (navController: NavController) {
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
             )
-            SearchBar(hint = "Pesquisa...",
+            SearchBar(hint = "Pesquisar...",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
             ){
 
             }
-
                 
             }
         }
@@ -77,7 +80,7 @@ fun SearchBar(
     var isHintDisplayed by remember { mutableStateOf(hint != "") }
 
     Box(modifier = modifier) {
-        BasicTextField(
+        TextField(
             value = text,
             onValueChange = {
                 text = it
@@ -106,26 +109,27 @@ fun SearchBar(
             )
         }
     }
+
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewPokemonListScreen() {
-    MaterialTheme {
-        Surface {
-            PokemonListScreen(navController = null)
-        }
-
+    val navController = rememberNavController()
+    PokedexTheme {
+        PokemonListScreen(navController = navController)
     }
 }
 
-
-
-
-
-
-
-
-
-
+@Composable
+fun Greeting(name:String){
+    Text(text = "Hola $name")
+}
+@Preview(showBackground = true)
+@Composable
+fun PreviewGreeting(){
+    PokedexTheme {
+        Greeting("vai")
+    }
+}
 
