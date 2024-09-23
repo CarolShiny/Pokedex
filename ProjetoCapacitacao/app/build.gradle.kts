@@ -62,10 +62,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     //implementation(libs.androidx.material3)
-    implementation(libs.androidx.material3.android)
-    implementation(libs.androidx.compose.material)
-    implementation(libs.androidx.compose.material3)
+
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.material3.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -73,6 +72,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //compose
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.material3)
 
     //Coroutines
     implementation(libs.kotlinx.coroutines.core)
@@ -82,25 +85,44 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
 
+    //Room
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.room.compiler)
+    implementation (libs.room.runtime)
+    implementation(libs.room.code.gson) //Dependencia do Gson
+    annotationProcessor(libs.room.compiler)
+
+
     //ViewModel e LiveData
     implementation(libs.lifecycle.livedata)
     implementation(libs.lifecycle.viewmodel)
 
-    //Room para Database
-    implementation(libs.androidx.room.ktx)
-    kapt(libs.room.compiler)
-    implementation (libs.room.runtime)
+
 
     //Dagger - Hilt
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
-    implementation (libs.androidx.hilt.lifecycle.viewmodel)
+    //implementation (libs.androidx.hilt.lifecycle.viewmodel)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.navegation.fragment)
     kapt(libs.androidx.hilt.compiler)
-    implementation(libs.android.suport.palette.v7)
+
+    //Coil
+    implementation(libs.coil.kt)
+    implementation(libs.coil.compose)
+
+    //Glide
+    implementation(libs.glide)
+    implementation(libs.glide.compile)
+
+
+    //Palette
+    implementation (libs.androidx.suport.palette)
+
 
     //Timber
     implementation(libs.jakewharton.timber)
+
 
 
 }

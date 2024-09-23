@@ -7,9 +7,6 @@ import com.example.pokedex.data.modeldados.remoto.Responses.PokemonList
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-//Configuração do retrofit, os limites que eles vão pegar os nomes dos Pokemon
-//vai retornar a lista de Pokemon
-
 interface PokeApiService {
     @GET ("pokemon")
     suspend fun getPokemonList(

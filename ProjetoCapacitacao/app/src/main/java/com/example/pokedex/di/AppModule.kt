@@ -1,7 +1,7 @@
 package com.example.pokedex.di
 
 import com.example.pokedex.api.PokeApiService
-import com.example.pokedex.api.RetrofitInstance.BASE_URL
+import com.example.pokedex.util.Constants.BASE_URL
 import com.example.pokedex.repository.PokemonRepository
 import dagger.Module
 import dagger.Provides

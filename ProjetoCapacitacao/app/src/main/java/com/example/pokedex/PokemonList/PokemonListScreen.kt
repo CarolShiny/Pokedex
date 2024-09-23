@@ -1,20 +1,22 @@
-package com.example.pokedex.main
+package com.example.pokedex.PokemonList
 
-
+import android.graphics.drawable.Drawable
+import android.widget.ImageView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -24,29 +26,43 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.example.pokedex.R
+import com.example.pokedex.data.models.PokedexListEntry
 import com.example.pokedex.ui.theme.PokedexTheme
+import com.example.pokedex.ui.theme.RobotoCondensed
+import com.example.pokedex.viewmodel.PokemonListViewModel
 
 
 //Tela de lista de Pokemon
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun PokemonListScreen (navController: NavController) {
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
     ){
-        Greeting(name = "vai")
         Column {
             Spacer(modifier = Modifier.height(20.dp))
             Image(
@@ -112,6 +128,83 @@ fun SearchBar(
 
 }
 
+@Composable
+fun PokedexEntry(
+    entry: PokedexListEntry,
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    viewModel: PokemonListViewModel = hiltViewModel()
+){
+    val defaultDominatColor = MaterialTheme.colorScheme.surface
+    var dominantColor by remember {
+        mutableStateOf(defaultDominatColor)
+    }
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .shadow(5.dp, RoundedCornerShape(10.dp))
+            .clip(RoundedCornerShape(10.dp))
+            .aspectRatio(1f)
+            .background(
+                Brush.verticalGradient(
+                    listOf(
+                        dominantColor,
+                        defaultDominatColor
+                    )
+                )
+            )
+            .clickable{
+                navController.navigate(
+                    "pokemon_tela_detalhes/${dominantColor.toArgb()}/${entry.pokemonName}"
+                )
+            }
+    ){
+        Column{
+            GlideImage(
+                imageUrl = entry.imageUrl,
+                modifier = Modifier
+                    .size(120.dp)
+                    .align(Alignment.CenterHorizontally),
+            )
+            Text(
+                text = entry.pokemonName,
+                fontFamily = RobotoCondensed,
+                textAlign = TextAlign.Center,
+                fontSize = 20.sp,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+
+
+}
+
+@Composable
+fun GlideImage(
+    imageUrl: String,
+    modifier: Modifier = Modifier,
+
+) {
+    AndroidView(
+        factory = { context ->
+            ImageView(context).apply {
+                scaleType = ImageView.ScaleType.CENTER_CROP
+            }
+        },
+        update = { imageView ->
+            // Responsável por carregar a imagem
+            Glide.with(imageView.context)
+                .load(imageUrl)
+                //.placeholder(R.drawable.placeholder_image) // Placeholder enquanto carrega
+                //.error(R.drawable.error_image) // Imagem de erro caso falhe o carregamento
+                .into(imageView)
+        },
+        modifier = modifier
+            .size(120.dp)
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewPokemonListScreen() {
@@ -121,15 +214,5 @@ fun PreviewPokemonListScreen() {
     }
 }
 
-@Composable
-fun Greeting(name:String){
-    Text(text = "Hola $name")
-}
-@Preview(showBackground = true)
-@Composable
-fun PreviewGreeting(){
-    PokedexTheme {
-        Greeting("vai")
-    }
-}
+
 

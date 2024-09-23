@@ -5,7 +5,7 @@ import com.example.pokedex.data.modeldados.remoto.Responses.Pokemon
 import com.example.pokedex.data.modeldados.remoto.Responses.PokemonList
 import com.example.pokedex.util.Resource
 import dagger.hilt.android.scopes.ActivityScoped
-import jakarta.inject.Inject
+import javax.inject.Inject
 
 //vai armazenar os dados de acordo com o tempo de vida da activity
 @ActivityScoped
@@ -17,7 +17,7 @@ class PokemonRepository @Inject constructor(
         val response = try {
             api.getPokemonList(limit,offset)
         }catch (e:Exception){
-            return Resource.Error("Erro no carregamento da página. Verifique sua conecção com a internet ")
+            return Resource.Error("Erro no carregamento da página. ")
         }
         return Resource.Success(response)
     }
