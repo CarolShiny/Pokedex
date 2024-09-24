@@ -113,7 +113,7 @@ dependencies {
 
     //Glide
     implementation(libs.glide)
-    implementation(libs.glide.compile)
+    kapt(libs.glide.compile)
 
 
     //Palette

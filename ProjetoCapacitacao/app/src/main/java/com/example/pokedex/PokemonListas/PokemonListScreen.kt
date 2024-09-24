@@ -1,12 +1,13 @@
-package com.example.pokedex.PokemonList
+package com.example.pokedex.PokemonListas
 
-import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +38,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,10 +47,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
 import com.example.pokedex.R
+import com.example.pokedex.data.modeldados.remoto.Responses.PokemonList
 import com.example.pokedex.data.models.PokedexListEntry
 import com.example.pokedex.ui.theme.PokedexTheme
 import com.example.pokedex.ui.theme.RobotoCondensed
@@ -58,7 +58,7 @@ import com.example.pokedex.viewmodel.PokemonListViewModel
 //Tela de lista de Pokemon
 
 @Composable
-fun PokemonListScreen (navController: NavController) {
+fun PokemonListScreen (navController: NavController, viewModel: PokemonListViewModel = hiltViewModel()) {
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
@@ -79,6 +79,8 @@ fun PokemonListScreen (navController: NavController) {
             ){
 
             }
+            Spacer(modifier = Modifier.height(16.dp))
+            PokemonList(navController = navController)
                 
             }
         }
@@ -89,7 +91,7 @@ fun PokemonListScreen (navController: NavController) {
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
-    hint: String = "Nome do Pokemon",
+    hint: String = " ",
     onSearch: (String) -> Unit = {}
 ) {
     var text by remember { mutableStateOf(" ") }
@@ -129,6 +131,39 @@ fun SearchBar(
 }
 
 @Composable
+fun PokemonList(
+    navController: NavController,
+    viewModel: PokemonListViewModel = hiltViewModel()
+){
+    val pokemonList by remember { viewModel._pokemonList }
+    val endReached by remember { viewModel.endReached }
+    val loadError by remember { viewModel._loadError }
+    val isLoading by remember { viewModel.isLoading }
+
+    LazyColumn(contentPadding = PaddingValues(16.dp)) {
+        //calculo para determinar o itens que são os pokemons
+        val itemCount = if (pokemonList.size % 2 == 0) {
+            pokemonList.size / 2
+        }else {
+            pokemonList.size / 2 + 1
+        }
+        items(itemCount){
+            //Verificar a contagem de itens e ver se precisa rolar para baixo
+            if(it >= itemCount - 1 && !endReached){
+                viewModel.loadPokemonPaginated()
+
+            }
+            PokedexRow(rowIndex = it, entries = pokemonList, navController = navController)
+        }
+
+
+    }
+
+}
+
+
+//vai cuidar da entrada da pokedex
+@Composable
 fun PokedexEntry(
     entry: PokedexListEntry,
     navController: NavController,
@@ -154,14 +189,14 @@ fun PokedexEntry(
                     )
                 )
             )
-            .clickable{
+            .clickable {
                 navController.navigate(
                     "pokemon_tela_detalhes/${dominantColor.toArgb()}/${entry.pokemonName}"
                 )
             }
     ){
         Column{
-            GlideImage(
+           GlideImage(
                 imageUrl = entry.imageUrl,
                 modifier = Modifier
                     .size(120.dp)
@@ -172,7 +207,9 @@ fun PokedexEntry(
                 fontFamily = RobotoCondensed,
                 textAlign = TextAlign.Center,
                 fontSize = 20.sp,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 1.dp)
             )
         }
     }
@@ -185,7 +222,7 @@ fun GlideImage(
     imageUrl: String,
     modifier: Modifier = Modifier,
 
-) {
+) { //Integração com o compose para carregar as imagens
     AndroidView(
         factory = { context ->
             ImageView(context).apply {
@@ -193,11 +230,10 @@ fun GlideImage(
             }
         },
         update = { imageView ->
-            // Responsável por carregar a imagem
             Glide.with(imageView.context)
                 .load(imageUrl)
-                //.placeholder(R.drawable.placeholder_image) // Placeholder enquanto carrega
-                //.error(R.drawable.error_image) // Imagem de erro caso falhe o carregamento
+                .placeholder(R.drawable.placeholder_image) // indica a espera pelo carregamento das imagens
+                .error(R.drawable.baseline_sync_problem_24) // Caso ocorra erro no carregamento, aparecerá essa imagem
                 .into(imageView)
         },
         modifier = modifier
@@ -205,14 +241,35 @@ fun GlideImage(
     )
 }
 
-@Preview(showBackground = true)
+//torna as linhas da entrada da pokedex em uma linha combinável
 @Composable
-fun PreviewPokemonListScreen() {
-    val navController = rememberNavController()
-    PokedexTheme {
-        PokemonListScreen(navController = navController)
+fun PokedexRow(
+    rowIndex: Int,
+    entries: List<PokedexListEntry>,
+    navController: NavController
+){ //Entradas dos Pokemons na Pokedex
+
+    Column {
+        Row {
+            PokedexEntry(entry = entries[rowIndex * 2],
+                navController = navController,
+                modifier = Modifier.weight(1f) // atribue a mesma quant de largura para cada pokemon
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            if (entries.size >= rowIndex * 2 + 2){
+                PokedexEntry(entry = entries[rowIndex * 2 + 1],
+                    navController = navController,
+                    modifier = Modifier.weight(1f))
+            } else{
+                Spacer(modifier = Modifier.weight(1f))
+            }
     }
+        Spacer(modifier = Modifier.height(16.dp))
+
 }
+}
+
+
 
 
 
