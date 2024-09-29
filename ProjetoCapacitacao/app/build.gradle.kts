@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.jetbrains.kotlin.kapt)
+    alias(libs.plugins.kapt)
+    alias(libs.plugins.hiltPlugin)
 
 }
 
@@ -100,12 +101,12 @@ dependencies {
 
 
     //Dagger - Hilt
+
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
-    //implementation (libs.androidx.hilt.lifecycle.viewmodel)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.hilt.navegation.fragment)
-    kapt(libs.androidx.hilt.compiler)
+
 
     //Coil
     implementation(libs.coil.kt)

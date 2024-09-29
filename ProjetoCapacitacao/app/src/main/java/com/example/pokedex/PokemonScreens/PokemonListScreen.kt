@@ -1,4 +1,4 @@
-package com.example.pokedex.PokemonListas
+package com.example.pokedex.PokemonScreens
 
 import android.widget.ImageView
 import androidx.compose.foundation.Image
@@ -19,11 +19,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,21 +39,20 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import coil.imageLoader
+import coil.request.ImageRequest
 import com.bumptech.glide.Glide
 import com.example.pokedex.R
-import com.example.pokedex.data.modeldados.remoto.Responses.PokemonList
 import com.example.pokedex.data.models.PokedexListEntry
-import com.example.pokedex.ui.theme.PokedexTheme
 import com.example.pokedex.ui.theme.RobotoCondensed
 import com.example.pokedex.viewmodel.PokemonListViewModel
 
@@ -67,7 +69,7 @@ fun PokemonListScreen (navController: NavController, viewModel: PokemonListViewM
             Spacer(modifier = Modifier.height(20.dp))
             Image(
                 painter = painterResource(id = R.drawable.ic_international_pok_mon_logo),
-                contentDescription = "Pokemon",
+                contentDescription = "Pokemon_Logo",
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
@@ -77,7 +79,8 @@ fun PokemonListScreen (navController: NavController, viewModel: PokemonListViewM
                     .fillMaxWidth()
                     .padding(16.dp)
             ){
-
+                query ->
+                viewModel.filterPokemonList(query)  // Atualizar a lista de acordo com a pesquisa
             }
             Spacer(modifier = Modifier.height(16.dp))
             PokemonList(navController = navController)
@@ -92,9 +95,10 @@ fun PokemonListScreen (navController: NavController, viewModel: PokemonListViewM
 fun SearchBar(
     modifier: Modifier = Modifier,
     hint: String = " ",
-    onSearch: (String) -> Unit = {}
+    onSearch: (String) -> Unit
 ) {
     var text by remember { mutableStateOf(" ") }
+
     var isHintDisplayed by remember { mutableStateOf(hint != "") }
 
     Box(modifier = modifier) {
@@ -135,7 +139,7 @@ fun PokemonList(
     navController: NavController,
     viewModel: PokemonListViewModel = hiltViewModel()
 ){
-    val pokemonList by remember { viewModel._pokemonList }
+    val pokemonList by remember { viewModel.filteredPokemonList }
     val endReached by remember { viewModel.endReached }
     val loadError by remember { viewModel._loadError }
     val isLoading by remember { viewModel.isLoading }
@@ -149,14 +153,25 @@ fun PokemonList(
         }
         items(itemCount){
             //Verificar a contagem de itens e ver se precisa rolar para baixo
-            if(it >= itemCount - 1 && !endReached){
+            if(it >= itemCount - 1 && !viewModel.endReached.value && viewModel.filteredPokemonList.value.size == viewModel._pokemonList.size){
                 viewModel.loadPokemonPaginated()
 
             }
             PokedexRow(rowIndex = it, entries = pokemonList, navController = navController)
         }
-
-
+    }
+    Box(  //Mensagem de carregamento ou de erro
+        contentAlignment =  Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ){
+        if (isLoading){
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+        }
+        else{
+            RetrySection(error = loadError){
+                viewModel.loadPokemonPaginated()
+            }
+        }
     }
 
 }
@@ -171,9 +186,32 @@ fun PokedexEntry(
     viewModel: PokemonListViewModel = hiltViewModel()
 ){
     val defaultDominatColor = MaterialTheme.colorScheme.surface
+
+    //vai armazenar a cor dominante
     var dominantColor by remember {
         mutableStateOf(defaultDominatColor)
     }
+
+    val context = LocalContext.current   //obtem o contexto
+
+    //Cria uma ImageRequest separado para processamento da cor dominante
+    LaunchedEffect(entry.imageUrl) {
+        val request = ImageRequest.Builder(context)
+            .data(entry.imageUrl)
+            .allowHardware(false) // Necessário para operações de Bitmap
+            .build()
+
+        val drawable = request.context.imageLoader.execute(request).drawable
+        drawable?.let {
+            // Calcular a cor dominante
+            viewModel.calcDominantColor(it) { color ->
+                dominantColor = color
+            }
+        }
+    }
+
+    // Observe o estado reativo do favorito
+    //var isFavorite by remember { mutableStateOf(viewModel.isPokemonFavorite(entry.number)) }
 
     Box(
         contentAlignment = Alignment.Center,
@@ -269,6 +307,23 @@ fun PokedexRow(
 }
 }
 
+//Mensagem de carregamento ou de erro
+@Composable
+fun RetrySection(
+    error: String,
+    onRetry: () -> Unit
+) {
+    Column {
+        Text(text = error, color = Color.Red, fontSize = 18.sp)
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(
+            onClick = { onRetry() },
+            modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+        ) {
+            Text(text = "Tentar novamente")
+        }
+    }
+}
 
 
 

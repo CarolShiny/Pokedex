@@ -11,7 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.pokedex.PokemonListas.PokemonListScreen
+import com.example.pokedex.PokemonScreens.PokemonListScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
                         PokemonListScreen(navController = navController)
 
                     }
-                    composable("pokemon_tela_detalhes/{dominantColor}/{PokemonName}",
+                    composable("pokemon_detail_Screen/{dominantColor}/{PokemonName}",
                         arguments = listOf(
                             navArgument("dominantColor"){
                                 type = NavType.IntType //mudar cor de acordo com o tipo de pokemon

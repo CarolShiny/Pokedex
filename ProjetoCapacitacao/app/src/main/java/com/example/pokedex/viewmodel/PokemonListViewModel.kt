@@ -32,7 +32,8 @@ class PokemonListViewModel @Inject constructor(
     //variável para carregar a primeira página
     private var curPage = 0
 
-    var _pokemonList = mutableStateOf<List<PokedexListEntry>>(listOf()) // armazenar a lista em tempo real
+    var _pokemonList = mutableListOf<PokedexListEntry>()
+    val filteredPokemonList = mutableStateOf<List<PokedexListEntry>>(listOf()) // armazenar a lista em tempo real
 
     var _loadError = mutableStateOf("") //tratamento de erro
     var isLoading = mutableStateOf(false)
@@ -67,9 +68,11 @@ class PokemonListViewModel @Inject constructor(
 
                     curPage++
 
-                    _loadError.value = ""
+                    _loadError.value = " "
                     isLoading.value = false
-                    _pokemonList.value += pokedexEntries  //lista com os pokemons recem-paginados
+
+                    _pokemonList.addAll(pokedexEntries)
+                    filteredPokemonList.value = _pokemonList  //lista com os pokemons recem-paginados
 
                 }
 
@@ -80,49 +83,29 @@ class PokemonListViewModel @Inject constructor(
 
                 is Resource.Loading -> TODO()
             }
-
-
         }
-
     }
-
-
 
 
     fun calcDominantColor(drawable: Drawable, onfinish: (Color) -> Unit){
         val bmp = (drawable as BitmapDrawable).bitmap.copy(Bitmap.Config.ARGB_8888, true)
         Palette.from(bmp).generate{palette -> palette?.dominantSwatch?.rgb?.let { colorValue ->
             onfinish(Color(colorValue))
-        }}
+        }
+        }
     }
-/* *********************************** Fim da alteração ******************************************************************  */
 
-//    //private val _pokemonList = MutableStateFlow<List<Pokemon>>(emptyList())
-//    //val pokemonList: StateFlow<List<Pokemon>> get() = _pokemonList
-//
-//    private val _isLoading = MutableStateFlow(false)
-//    //val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
-//
-//    //lógica da paginação para o app poder carregar os Pokemon em blocos
-//    private var currentOffset = 0  // número de pokemon que já foram carregados
-//    private val pageSize = 20 // quant Pokemon serão carregados a cada requisição
-//
-//    fun fetchPokemonList(){
-//        viewModelScope.launch {
-//            _isLoading.value = true
-//            try {
-//                //val response = AppModule.api.getPokemonList(limit = pageSize, offset = currentOffset)
-//                currentOffset+=pageSize
-//             //   _pokemonList.value = _pokemonList.value.orEmpty() + response.result
-//            } catch (e: Exception){
-//                //depois vou acrescentar o erro que vai aparecer na UI
-//
-//            } finally {
-//                _isLoading.value = false
-//            }
-//
-//        }
-    //}
+        //mostra pokemons com base no que o usuário pesquisar
+    fun filterPokemonList(query: String) {
+        if (query.isEmpty()) {
+            filteredPokemonList.value = _pokemonList // Mostrar todos os pokémons se não houver pesquisa
+        } else {
+            filteredPokemonList.value = _pokemonList.filter {
+                it.pokemonName.lowercase(Locale.ROOT).startsWith(query.lowercase(Locale.ROOT))
+            }
+        }
+    }
+
 
 
 
