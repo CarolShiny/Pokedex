@@ -22,6 +22,7 @@ class PokemonRepository @Inject constructor(
         return Resource.Success(response)
     }
 
+    // informações específicas do pokemon
     suspend fun getPokemonInfo(pokemonName: String): Resource<Pokemon>{
         val response = try{
             api.getPokemonInfo(pokemonName)

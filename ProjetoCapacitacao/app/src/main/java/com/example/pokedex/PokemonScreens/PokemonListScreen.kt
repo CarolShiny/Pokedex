@@ -1,6 +1,7 @@
 package com.example.pokedex.PokemonScreens
 
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,7 +21,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -40,8 +46,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,6 +60,7 @@ import coil.imageLoader
 import coil.request.ImageRequest
 import com.bumptech.glide.Glide
 import com.example.pokedex.R
+import com.example.pokedex.bd.FavoritePokemon
 import com.example.pokedex.data.models.PokedexListEntry
 import com.example.pokedex.ui.theme.RobotoCondensed
 import com.example.pokedex.viewmodel.PokemonListViewModel
@@ -69,25 +78,46 @@ fun PokemonListScreen (navController: NavController, viewModel: PokemonListViewM
             Spacer(modifier = Modifier.height(20.dp))
             Image(
                 painter = painterResource(id = R.drawable.ic_international_pok_mon_logo),
-                contentDescription = "Pokemon_Logo",
+                contentDescription = "Pokemon", //logo
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
             )
-            SearchBar(hint = "Pesquisar...",
+            Row( modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically)
+            {
+                SearchBar(hint = "Pesquisar...",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
-            ){
-                query ->
-                viewModel.filterPokemonList(query)  // Atualizar a lista de acordo com a pesquisa
+                    .padding(16.dp),
+                onSearch = { query ->
+                    viewModel.filterPokemonList(query)  // Atualizar a lista de acordo com a pesquisa
+                }
+            )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Button(onClick = { navController.navigate("favotire_pokemons_screen") },
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .height(42.dp)) {
+                    Text(
+                        text = "Pokemons Favoritos",
+                        fontWeight = FontWeight.Bold,
+                        color = colorResource(id = R.color.teal_700),
+                        fontSize = 18.sp )
+                }
             }
+
+
+        }
             Spacer(modifier = Modifier.height(16.dp))
             PokemonList(navController = navController)
                 
             }
-        }
-    }
+ }
+
 
 
 //Barra de pesquisa
@@ -210,8 +240,8 @@ fun PokedexEntry(
         }
     }
 
-    // Observe o estado reativo do favorito
-    //var isFavorite by remember { mutableStateOf(viewModel.isPokemonFavorite(entry.number)) }
+    // variável sobre o estado do  Pokemon Favorito
+    var isFavorite by remember { mutableStateOf(viewModel.isPokemonFavorite(entry.number)) }
 
     Box(
         contentAlignment = Alignment.Center,
@@ -229,7 +259,7 @@ fun PokedexEntry(
             )
             .clickable {
                 navController.navigate(
-                    "pokemon_tela_detalhes/${dominantColor.toArgb()}/${entry.pokemonName}"
+                    "pokemon_detail_screen/${dominantColor.toArgb()}/${entry.pokemonName}"
                 )
             }
     ){
@@ -249,9 +279,46 @@ fun PokedexEntry(
                     .fillMaxWidth()
                     .padding(bottom = 1.dp)
             )
+            IconToggleButton(checked = isFavorite, onCheckedChange = {
+                if(isFavorite){
+                    viewModel.removerPokemonFavoritos(
+                        FavoritePokemon(
+                            entry.number,
+                            entry.pokemonName,
+                            entry.imageUrl
+                        )
+                    )
+                    isFavorite = !isFavorite
+                    Toast.makeText(
+                        context,
+                        "${entry.pokemonName} desfavoritado!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else{
+                    viewModel.addPokemonFavorites(
+                        FavoritePokemon(
+                            entry.number,
+                            entry.pokemonName,
+                            entry.imageUrl
+                        )
+                    ) 
+                        isFavorite = !isFavorite
+                        Toast.makeText(context,
+                            "${entry.pokemonName} favoritado!",
+                            Toast.LENGTH_SHORT).show()
+                }    
+                }
+            ) {
+                  Icon(
+                      imageVector = if(isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                      contentDescription = "Favoritar Pokemon",
+                      tint = if(isFavorite) colorResource(id = R.color.pink) else colorResource(id = R.color.teal_700)
+                  )  
+            }
+
+
         }
     }
-
 
 }
 
