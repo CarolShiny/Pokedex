@@ -59,6 +59,9 @@ import com.example.pokedex.util.parseTypeToColor
 import com.example.pokedex.viewmodel.PokemonDetailViewModel
 import java.util.Locale
 import kotlin.math.round
+import com.example.pokedex.util.parseStatToAbbr
+import com.example.pokedex.util.parseStatToAbbr
+import com.example.pokedex.util.parseStatToColor
 
 @Composable
 fun PokemonDetailScreen (
@@ -393,5 +396,61 @@ fun PokemonBaseStats(
 ) {
     val maxBaseStat = remember {
         pokemonInfo.stats.maxOf { it.base_stat }
+    }
+    
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+    ){
+        Text(
+            text = "Status Básicos: ",
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            color = colorResource(R.color.black)
+        )
+        Spacer(modifier = Modifier.height(14.dp))
+        for (i in pokemonInfo.stats.indices){
+            val stat = pokemonInfo.stats[i]
+            PokemonStat(statName = parseStatToAbbr(stat), statValue = stat.base_stat, 
+                statMaxValue = maxBaseStat, statColor = parseStatToColor(stat),
+                animationDelay = i * animationDelayPerItem
+                )
+                Spacer(modifier = Modifier.height(8.dp))     
+        }   
+        Text(text = "Habilidades: ",
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            modifier = Modifier
+                .padding(top = 16.dp)
+                .align(Alignment.CenterHorizontally)
+            )
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        //Lista de habilidades
+        pokemonInfo.abilities.forEach { ability ->
+            Box (
+            modifier = Modifier
+                .clip(CircleShape)
+                .background(parseTypeToColor(types[0]))
+                .padding(7.dp)
+            ){
+                Text(
+                    text = ability.ability.name.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.ROOT
+                    ) else it.toString()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .align(Alignment.Center),
+                fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )                
+            }
+            Spacer(modifier = Modifier.height(4.dp))
+        }
     }
 }

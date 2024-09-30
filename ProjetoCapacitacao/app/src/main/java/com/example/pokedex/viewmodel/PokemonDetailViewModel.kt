@@ -24,9 +24,6 @@ class PokemonDetailViewModel @Inject constructor(
     }
 
 
-
-
-
 // Estado para armazenar os detalhes do Pokémon
     //var pokemonDetail = mutableStateOf<Pokemon?>(null)
 //    var loadError = mutableStateOf("") // Estado de erro
@@ -61,4 +58,3 @@ class PokemonDetailViewModel @Inject constructor(
 
 
 
-}

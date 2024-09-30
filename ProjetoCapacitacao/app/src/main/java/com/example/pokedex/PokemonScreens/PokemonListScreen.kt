@@ -88,7 +88,7 @@ fun PokemonListScreen (navController: NavController, viewModel: PokemonListViewM
                 .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically)
             {
-                SearchBar(hint = "Pesquisar...",
+                SearchBar(hint = "Pesquisar: ",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),

@@ -3,31 +3,8 @@ package com.example.pokedex.util
 import androidx.compose.ui.graphics.Color
 import com.example.pokedex.data.modeldados.remoto.Responses.Stat
 import com.example.pokedex.data.modeldados.remoto.Responses.Type
-import com.example.pokedex.ui.theme.AtkColor
-import com.example.pokedex.ui.theme.DefColor
-import com.example.pokedex.ui.theme.HPColor
-import com.example.pokedex.ui.theme.SpAtkColor
-import com.example.pokedex.ui.theme.SpDefColor
-import com.example.pokedex.ui.theme.SpdColor
-import com.example.pokedex.ui.theme.TypeBug
-import com.example.pokedex.ui.theme.TypeDark
-import com.example.pokedex.ui.theme.TypeDragon
-import com.example.pokedex.ui.theme.TypeElectric
-import com.example.pokedex.ui.theme.TypeFairy
-import com.example.pokedex.ui.theme.TypeFighting
-import com.example.pokedex.ui.theme.TypeFire
-import com.example.pokedex.ui.theme.TypeFlying
-import com.example.pokedex.ui.theme.TypeGhost
-import com.example.pokedex.ui.theme.TypeGrass
-import com.example.pokedex.ui.theme.TypeGround
-import com.example.pokedex.ui.theme.TypeIce
-import com.example.pokedex.ui.theme.TypeNormal
-import com.example.pokedex.ui.theme.TypePoison
-import com.example.pokedex.ui.theme.TypePsychic
-import com.example.pokedex.ui.theme.TypeRock
-import com.example.pokedex.ui.theme.TypeSteel
-import com.example.pokedex.ui.theme.TypeWater
 import java.util.*
+import com.example.pokedex.ui.theme.*
 
 
 fun parseTypeToColor(type: Type): Color {
