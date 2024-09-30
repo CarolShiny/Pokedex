@@ -72,7 +72,7 @@ fun PokemonDetailScreen (
     // Estado para carregar as informações do Pokémon
     val pokemonInfo = produceState<Resource<Pokemon>>(initialValue = Resource.Loading<Pokemon>()) {
         value = viewModel.getPokemonInfo(pokemonName)
-    }
+    }.value
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -122,7 +122,7 @@ fun PokemonDetailScreen (
                 .fillMaxSize()
         ){
             if (pokemonInfo is Resource.Success) {
-                pokemonInfo.data?.spirits?.let { sprites ->
+                pokemonInfo.data?.sprites?.let { sprites ->
                     AsyncImage(
                         model = sprites.front_default,
                         contentDescription = pokemonInfo.data.name,
@@ -394,3 +394,4 @@ fun PokemonBaseStats(
     val maxBaseStat = remember {
         pokemonInfo.stats.maxOf { it.base_stat }
     }
+}

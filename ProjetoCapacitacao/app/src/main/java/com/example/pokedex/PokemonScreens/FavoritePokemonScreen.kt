@@ -6,7 +6,7 @@ import androidx.navigation.NavController
 import com.example.pokedex.viewmodel.PokemonListViewModel
 
 @Composable
- fun FavoritePokwmonScreen (
+ fun FavoritePokemonScreen (
     navController: NavController,
     viewModel: PokemonListViewModel = hiltViewModel()
  ) {
