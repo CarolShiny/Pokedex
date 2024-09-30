@@ -1,8 +1,17 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.jetbrains.kotlin.kapt)
 
+    // navigation-compose
+    id("androidx.navigation.safeargs.kotlin")
+
+    // ksp
+    id("com.google.devtools.ksp")
+
+    // compose compiler
+    alias(libs.plugins.compose.compiler)
+
+    kotlin("plugin.serialization") version "2.0.20"
 }
 
 android {
@@ -61,11 +70,7 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    //implementation(libs.androidx.material3)
-    implementation(libs.androidx.material3.android)
-    implementation(libs.androidx.compose.material)
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -74,33 +79,57 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    //Coroutines
-    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.androidx.foundation)
+
+    // livedata
+    implementation(libs.androidx.compose.runtime.livedata)
+
+    // coroutines
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
 
-    //Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.gson)
+    // navigation
+    // Jetpack Compose integration
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json) // type-safety
+    // Testing Navigation
+    androidTestImplementation(libs.androidx.navigation.testing)
+    // ui
+    implementation(libs.androidx.material3.adaptive.navigation.suite)
 
-    //ViewModel e LiveData
-    implementation(libs.lifecycle.livedata)
-    implementation(libs.lifecycle.viewmodel)
+    // layout
+//    implementation(libs.androidx.constraintlayout)
+//    //// to use constraintlayout in compose
+//    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0-beta01")
 
-    //Room para Database
+    //  images
+    implementation(libs.glide.compose)
+
+    // paging
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.runtime.ktx)
+
+    ////  optional - Jetpack Compose integration
+    implementation(libs.androidx.paging.compose)
+
+    // api
+    implementation(libs.retrofit2.retrofit)
+    implementation(libs.retrofit2.converter.gson)
+    implementation(libs.gson)
+
+    // persistence
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    //// To use Kotlin Symbol Processing (KSP)
+    ksp(libs.androidx.room.compiler)
+
+    //// optional - Kotlin Extensions and Coroutines support for Room
     implementation(libs.androidx.room.ktx)
-    kapt(libs.room.compiler)
-    implementation (libs.room.runtime)
 
-    //Dagger - Hilt
-    implementation(libs.dagger.hilt.android)
-    kapt(libs.dagger.hilt.compiler)
-    implementation (libs.androidx.hilt.lifecycle.viewmodel)
-    implementation(libs.androidx.hilt.navigation.compose)
-    kapt(libs.androidx.hilt.compiler)
-    implementation(libs.android.suport.palette.v7)
+    //// optional - Test helpers
+    testImplementation(libs.androidx.room.testing)
 
-    //Timber
-    implementation(libs.jakewharton.timber)
-
-
+    //// optional - Paging 3 Integration
+    implementation(libs.androidx.room.paging)
 }

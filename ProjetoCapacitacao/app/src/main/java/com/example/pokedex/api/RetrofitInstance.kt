@@ -1,13 +1,17 @@
 package com.example.pokedex.api
 
-import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
-//classe que vai acessar a api
+import retrofit2.Retrofit
 
 object RetrofitInstance {
-     const val BASE_URL = "https://pokeapi.co/api/v2/"
+    private val retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl("https://pokeapi.co/api/v2/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
 
-
-
+    val api: PokeApiService by lazy {
+        retrofit.create(PokeApiService::class.java)
+    }
 }
