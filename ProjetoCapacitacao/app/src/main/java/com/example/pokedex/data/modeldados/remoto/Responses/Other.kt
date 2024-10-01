@@ -1,8 +1,12 @@
 package com.example.pokedex.data.modeldados.remoto.Responses
 
+import com.google.gson.annotations.SerializedName
+
 data class Other(
-    val dream_world: com.example.pokedex.data.modeldados.remoto.Responses.DreamWorld,
-    val home: com.example.pokedex.data.modeldados.remoto.Responses.Home,
-    val official-artwork: com.example.pokedex.data.modeldados.remoto.Responses.OfficialArtwork,
-    val showdown: com.example.pokedex.data.modeldados.remoto.Responses.Showdown
+    @SerializedName("dream_world")
+    val dreamWorld: DreamWorld,
+    val home: Home,
+    @SerializedName("official-artwork")
+    val officialArtwork: OfficialArtwork,
+    val showdown: Showdown
 )

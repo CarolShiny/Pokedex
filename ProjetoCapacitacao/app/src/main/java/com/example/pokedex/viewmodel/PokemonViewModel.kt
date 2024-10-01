@@ -3,7 +3,7 @@ package com.example.pokedex.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedex.api.RetrofitInstance
-import com.example.pokedex.data.modeldados.Pokemon
+import com.example.pokedex.data.modeldados.remoto.Responses.Pokemon
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,7 +29,7 @@ class PokemonViewModel : ViewModel() {
             try {
                 val response = RetrofitInstance.api.getPokemonList(limit = pageSize, offset = currentOffset)
                 currentOffset+=pageSize
-                _pokemonList.value = _pokemonList.value.orEmpty() + response.result
+                //_pokemonList.value = _pokemonList.value.orEmpty() + response.results
             } catch (e: Exception){
                 //depois vou acrescentar o erro que vai aparecer na UI
 

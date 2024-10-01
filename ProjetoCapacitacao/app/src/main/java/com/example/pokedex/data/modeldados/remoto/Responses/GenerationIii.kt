@@ -1,7 +1,11 @@
 package com.example.pokedex.data.modeldados.remoto.Responses
 
+import com.google.gson.annotations.SerializedName
+
 data class GenerationIii(
-    val emerald: com.example.pokedex.data.modeldados.remoto.Responses.Emerald,
-    val firered-leafgreen: com.example.pokedex.data.modeldados.remoto.Responses.FireredLeafgreen,
-    val ruby-sapphire: com.example.pokedex.data.modeldados.remoto.Responses.RubySapphire
+    val emerald: Emerald,
+    @SerializedName("firered-leafgreen")
+    val fireredLeafgreen: FireredLeafgreen,
+    @SerializedName("ruby-sapphire")
+    val rubySapphire: RubySapphire
 )

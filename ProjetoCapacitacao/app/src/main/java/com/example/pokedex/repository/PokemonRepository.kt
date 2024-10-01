@@ -4,12 +4,11 @@ import com.example.pokedex.api.PokeApiService
 import com.example.pokedex.data.modeldados.remoto.Responses.Pokemon
 import com.example.pokedex.data.modeldados.remoto.Responses.PokemonList
 import com.example.pokedex.util.Resource
-import dagger.hilt.android.scopes.ActivityScoped
-import jakarta.inject.Inject
+
 
 //vai armazenar os dados de acordo com o tempo de vida da activity
-@ActivityScoped
-class PokemonRepository @Inject constructor(
+
+class PokemonRepository  (
     private val api: PokeApiService
 ){
     //implementação real da API
